@@ -46,6 +46,7 @@ class DiscordBot(discord.Client):
             except asyncio.TimeoutError:
                 self.logger.info("Reaction timeout.")
             else:
+                # TODO: Write current message and response in a log for model analysis
                 if str(reaction.emoji) == '👍':
                     await message.channel.send("Got a 👍")
                 elif str(reaction.emoji) == '👎':
