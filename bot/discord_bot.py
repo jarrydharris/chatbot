@@ -2,6 +2,7 @@ import discord
 import os
 import sys
 import logging
+import asyncio
 
 LOG_PATH = "./logs/discord.log"
 
@@ -28,11 +29,30 @@ class DiscordBot(discord.Client):
     def get_token(self):
         return self.token
 
+
     async def on_ready(self):
         print('We have logged in as {0.user}'.format(self))
         self.logger.info("CONNECTED.")
 
     async def on_message(self, message):
         if message.author == self.user:
-            return
-        
+            def check(reaction, user):
+                if str(reaction.emoji) == '👍':
+                    return user != message.author and str(reaction.emoji) == '👍'
+                elif str(reaction.emoji) == '👎':
+                    return user != message.author and str(reaction.emoji) == '👎'
+            try:
+                reaction, user = await self.wait_for('reaction_add', timeout=None, check=check)
+            except asyncio.TimeoutError:
+                self.logger.info("Reaction timeout.")
+            else:
+                if str(reaction.emoji) == '👍':
+                    await message.channel.send("Got a 👍")
+                elif str(reaction.emoji) == '👎':
+                    await message.channel.send("Got a 👎")
+                
+
+        if self.user.mentioned_in(message):
+            print('Message from {0.author}: {0.content}'.format(message))
+            #TODO: Read message, 
+            await message.channel.send("Test Response")
