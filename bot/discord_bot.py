@@ -1,3 +1,4 @@
+import io
 import discord
 import os
 import sys
@@ -65,5 +66,8 @@ class DiscordBot(discord.Client):
             print('Message from {0.author}: {0.content}'.format(message))
             #TODO: Read message
             #TODO: Strip user tags
-            #TODO: Generate a response
-            await message.channel.send("Test Response")
+            self.logger.info("Passing: " + "{0.content}".format(message))
+            # Passes message input to bot and awaits the response
+            response = self.bot.chat("{0.content}".format(message))
+            self.logger.info("Received response: " + response)
+            await message.channel.send(response)
