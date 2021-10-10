@@ -3,6 +3,7 @@ import os
 import sys
 import logging
 import asyncio
+from model.model import DialogueModel
 
 LOG_PATH = "./logs/discord.log"
 
@@ -26,8 +27,15 @@ class DiscordBot(discord.Client):
             print("\tExiting...")
             sys.exit()
 
-    def get_token(self):
+        # Initialize a bot
+        self.bot = None
+
+    def get_token(self) -> str:
         return self.token
+
+    def set_bot(self, bot: DialogueModel) -> None:
+        # TODO: type checking for the bot
+        self.bot = bot
 
 
     async def on_ready(self):
@@ -55,5 +63,7 @@ class DiscordBot(discord.Client):
 
         if self.user.mentioned_in(message):
             print('Message from {0.author}: {0.content}'.format(message))
-            #TODO: Read message, 
+            #TODO: Read message
+            #TODO: Strip user tags
+            #TODO: Generate a response
             await message.channel.send("Test Response")
